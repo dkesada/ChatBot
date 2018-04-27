@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import sys  
-
+import os
 
 def getOp(info):
 	op = 'alquiler'
@@ -27,7 +27,8 @@ def getTipo(info):
 		tipo = 'ático'
 	return tipo
 
-def scrapInfo(soup, n):
+def scrapInfo(soup):
+	n = len(os.listdir('./descripciones')) + 1
 	doc = open('descripciones/'+str(n), 'w')
 	
 	mainInfo = soup.findAll('span', {'class':'main-info__title-main'})
@@ -54,7 +55,7 @@ def scrapInfo(soup, n):
 
 def main():
 	# URL de Idealista tras una busqueda
-	url = 'https://www.idealista.com/alquiler-viviendas/coslada-madrid/'
+	url = 'https://www.idealista.com/alquiler-viviendas/madrid/corredor-del-henares/torrejon-de-ardoz/'
 
 	driver = webdriver.Firefox()
 	driver.get(url)
@@ -74,7 +75,7 @@ def main():
 			html = driver.page_source
 			soup = BeautifulSoup(html,'html.parser')
 			# 1 archivo por cada casa con descripción y características
-			scrapInfo(soup, i)
+			scrapInfo(soup)
 			print str(i*100/l) + '%...'
 			driver.back()
 			casas = driver.find_elements_by_class_name('item') #Tengo que hacerlo cada vez porque la lista de articulos se queda 'stale' si me muevo a uno de ellos y despues vuelvo
