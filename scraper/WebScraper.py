@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 #author: David Quesada López
 
+"""
+Small webscraper that gathers info of houses from a given url and saves them in separate files.
+Uses selenium for traversing the diferent houses and BeautifulSoup to gather the info.
+"""
+
 from urllib2 import urlopen
 from bs4 import BeautifulSoup
 from selenium import webdriver
