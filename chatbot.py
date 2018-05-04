@@ -5,18 +5,7 @@
 import sys
 from textblob import TextBlob
 from random import randint
-
-def cargarCasas():
-	path = 'scraper/InfoPisos'
-	doc = open(path, 'r')
-	casas = doc.read().split('\n')
-	doc.close()
-	res = []
-	for c in casas:
-		c = c.split(';')
-		res.append(c)
-	
-	return res
+import carga
 	
 def generarPregunta():
 	"""
@@ -44,7 +33,7 @@ def main():
 	4- Las características identificadas deben generar una serie de pisos válidos
 	5- Con los pisos válidos hay que generar una respuesta
 	"""
-	casas = cargarCasas() # Por ahora así. Puede sustituirse por una base de datos de mongo
+	casas = carga.cargarCasas() 
 	pregunta = generarPregunta()
 	casa = analizarPregunta(pregunta)
 
