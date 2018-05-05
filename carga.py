@@ -6,6 +6,16 @@ import sys
 from textblob import TextBlob
 from random import randint
 
+"""
+Módulo encargado de la carga de la información de la base de datos de pisos.
+Recoge el archivo InfoPisos generado por el webscrapper y lo almacena en una matriz local.
+La aproximación actual carga el archivo de texto a la memoria local, si el archivo creciese
+bastante, puede pasarse a cargarlos a una base en MongoDB.
+
+La función principal a la que se llama desde fuera es cargarCasas(), que devuelve la matriz con
+los pisos cargados.
+"""
+
 def cargarCasas():
 	"""
 	Por ahora así. Puede sustituirse por una base de datos
@@ -19,7 +29,8 @@ def cargarCasas():
 	res = []
 	for c in casas:
 		c = c.split(';')
-		res.append(cropArray(c))
+		res.append(c)
+		#res.append(cropArray(c))
 	
 	return res
 
@@ -93,7 +104,7 @@ def cropArray(c):
 	res.append(tipo(c[2]))
 	res.append(lugar(c[3]))
 	res.append(int(''.join(c[4].split('.'))))
-	res.append(int(c[5].split('m')[0])) # Falla en algunos casos, cambiar aproximación
+	res.append(int(c[5].split('m')[0])) # Falla en algunos casos, cambiar aproximación a regex
 	res.append(habit(c[6]))
 	res.append(int(c[7].split('b')[0]))
 	c = ''.join(c)

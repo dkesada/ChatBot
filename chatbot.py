@@ -5,7 +5,7 @@
 import sys
 from textblob import TextBlob
 from random import randint
-import carga
+import carga, inGrammar
 	
 def generarPregunta():
 	"""
@@ -35,7 +35,7 @@ def main():
 	"""
 	casas = carga.cargarCasas() 
 	pregunta = generarPregunta()
-	casa = analizarPregunta(pregunta)
+	casa = inGrammar.analizarPregunta(pregunta)
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
