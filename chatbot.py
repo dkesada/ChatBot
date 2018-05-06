@@ -3,7 +3,6 @@
 #author: David Quesada López
 
 import sys
-from textblob import TextBlob
 from random import randint
 import carga, inGrammar
 	
@@ -16,12 +15,6 @@ def generarPregunta():
 	res = doc.read().split(';')
 	doc.close()
 	return res[randint(0,len(res)-1)]
-
-def analizarPregunta(preg):
-	print(preg)
-	blob = TextBlob(preg)
-	blob.translate(to='en').tags
-	blob.translate(to='en').parse() #No me convence
 
 def main():
 	"""
