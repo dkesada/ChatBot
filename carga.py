@@ -3,8 +3,7 @@
 #author: David Quesada López
 
 import sys
-from textblob import TextBlob
-from random import randint
+from re import search
 
 """
 Módulo encargado de la carga de la información de la base de datos de pisos.
@@ -24,13 +23,39 @@ def cargarCasas():
 	sys.setdefaultencoding('utf8')
 	path = 'scraper/InfoPisos'
 	doc = open(path, 'r')
-	casas = doc.read().split('\n')
+	casas = doc.read().split('\ni')
 	doc.close()
 	res = []
 	for c in casas:
 		c = c.split(';')
-		res.append(c)
-		#res.append(cropArray(c))
+		res.append(cropArray(c))
+	
+	return res
+
+def cropArray(c):
+	"""
+	Convierte los atributos textuales de las casas en atributos numéricos.
+	[0] - 1 Alquiler, 2 Venta
+	[1] - 1 Chalet, 2 Piso, 3 Dúplex, 4 Ático, 5 Rústica
+	[2] - 1 Coslada, 2 Alcalá, 3 Mejorada, 4 Torrejón
+	[3] - Precio
+	[4] - m2
+	[5] - Habitaciones
+	[6] - Baños
+	[7] - 1 Nueva, 2 Buen estado, 3 A reformar
+	[8] - 0 N/D, 1 Amueblada, 2 Cocina equipada, 3 Sin amueblar
+	"""
+	res = []
+	res.append(op(c[1]))
+	res.append(tipo(c[2]))
+	res.append(lugar(c[3]))
+	res.append(int(''.join(c[4].split('.'))))
+	c = ''.join(c)
+	res.append(metros(c)) 
+	res.append(habit(c))
+	res.append(banos(c))
+	res.append(estado(c))
+	res.append(mobiliario(c))
 	
 	return res
 
@@ -62,10 +87,21 @@ def lugar(ciudad):
 		res = 4
 	return res
 
-def habit(num):
+def metros(casa):
+	s = search('[0-9]+ m²', casa)
+	res = int(s.group(0).split('m')[0])
+	return res
+	
+def habit(casa):
+	s = search('([0-9]+ habit)|(Sin habit)', casa)
 	res = 0
-	if 'Sin' not in num:
-		res = int(num.split('h')[0])
+	if 'Sin' not in s.group(0):
+		res = int(s.group(0).split('h')[0])	
+	return res
+
+def banos(casa):
+	s = search('[0-9]+ baño', casa)
+	res = int(s.group(0).split('b')[0])
 	return res
 
 def estado(casa):
@@ -86,29 +122,3 @@ def mobiliario(casa):
 		res = 3
 	return res
 	
-def cropArray(c):
-	"""
-	Convierte los atributos textuales de las casas en atributos numéricos.
-	[0] - 1 Alquiler, 2 Venta
-	[1] - 1 Chalet, 2 Piso, 3 Dúplex, 4 Ático, 5 Rústica
-	[2] - 1 Coslada, 2 Alcalá, 3 Mejorada, 4 Torrejón
-	[3] - Precio
-	[4] - m2
-	[5] - Habitaciones
-	[6] - Baños
-	[7] - 1 Nueva, 2 Buen estado, 3 A reformar
-	[8] - 0 N/D, 1 Amueblada, 2 Cocina equipada, 3 Sin amueblar
-	"""
-	res = []
-	res.append(op(c[1]))
-	res.append(tipo(c[2]))
-	res.append(lugar(c[3]))
-	res.append(int(''.join(c[4].split('.'))))
-	res.append(int(c[5].split('m')[0])) # Falla en algunos casos, cambiar aproximación a regex
-	res.append(habit(c[6]))
-	res.append(int(c[7].split('b')[0]))
-	c = ''.join(c)
-	res.append(estado(c))
-	res.append(mobiliario(c))
-	
-	return res
