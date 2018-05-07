@@ -3,6 +3,8 @@
 #author: David Quesada López
 
 from nltk import grammar, parse
+from re import findall
+from unidecode import unidecode
 
 """
 Módulo encargado de analizar las preguntas realizadas al chatbot por medio
@@ -18,20 +20,32 @@ def generarGramatica():
 	"""
 	Función que genera la FCG para reconocer las preguntas entrantes con nltk
 	"""
-	
+	# Meter la gramática en un archivo a parte mejor
 	gramatica = """
-		  Pregunta -> Peticion Tipo Caracs
-		  Peticion -> V NP | V NP PP
-		  Tipo -> "casa" | "casas" | "piso" | "pisos" | "dúplex" | "chalet" | "chalets" | "ático" | "áticos"
-		  Caracs -> Carac Caracs | Carac 
+		  Pregunta -> Peticion Caracs | Caracs
+		  Peticion -> Quiero | Enseña | Que | Cual | 
+		  Caracs -> Carac Caracs | Carac
+		  Carac ->
+		  Tipo -> "casa" | "casas" | "piso" | "pisos" | "duplex" | "chalet" | "chalets" | "atico" | "aticos"
 
 		  """
 	return grammar.FeatureGrammar.fromstring(gramatica)
+
+def tokenizar(pregunta):
+	"""
+	Tokeniza el string inicial y lo convierte en un array de tokens.
+	Simplifica el string de varias formas:
+	- Lo pasa a minúscula
+	- Unidecode pasa el string de unicode al ascii plano mas cercano (tildes y símbolos)
+	- Elimina signos de puntuación 
+	"""
+	return findall('\w+', unidecode(pregunta.decode('utf-8').lower()))
 
 
 def analizarPregunta(pregunta):
 	gramatica = generarGramatica()
 	parser = parse.RecursiveDescentParser(gramatica)
+	pregunta = tokenizar(pregunta)
 	piso = analizar(pregunta, parser)
 	
 	return piso
