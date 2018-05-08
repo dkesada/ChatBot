@@ -1,8 +1,7 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 #author: David Quesada López
 
-from nltk import grammar, parse
+from nltk import grammar, parse, data
 from re import findall
 from unidecode import unidecode
 
@@ -12,23 +11,16 @@ de una gramática libre de contexto. Utiliza la librería nltk para implementarl
 
 La función principal a la que se llama desde fuera es analizarPregunta(pregunta),
 que toma como argumento de entrada una pregunta en formato string (inicialmente
-tomadas del archivo preguntas.txt) y devuelve una plantilla de un piso con los atributos
-que se han especificado en la pregunta.
+tomadas del archivo preguntas.txt) y devuelve una casa con los atributos
+que se han especificado en la pregunta para su posterior búsqueda.
 """
 
 def generarGramatica():
 	"""
-	Función que genera la FCG para reconocer las preguntas entrantes con nltk
+	Función que genera la CFG para reconocer las preguntas entrantes con nltk
 	"""
-	# Meter la gramática en un archivo a parte mejor
-	gramatica = """
-		  Pregunta -> Peticion Caracs | Caracs
-		  Peticion -> Quiero | Enseña | Que | Cual | 
-		  Caracs -> Carac Caracs | Carac
-		  Carac ->
-		  Tipo -> "casa" | "casas" | "piso" | "pisos" | "duplex" | "chalet" | "chalets" | "atico" | "aticos"
+	gramatica = data.load('file:entrada.cfg')
 
-		  """
 	return grammar.FeatureGrammar.fromstring(gramatica)
 
 def tokenizar(pregunta):
@@ -41,6 +33,9 @@ def tokenizar(pregunta):
 	"""
 	return findall('\w+', unidecode(pregunta.decode('utf-8').lower()))
 
+def analizar(preg, parser):
+	it = parser.parse(preg)
+	Caracs = list(it.subtrees(filter=lambda x: x.label()=='Carac')) # Provisional, para sacar las características especificadas
 
 def analizarPregunta(pregunta):
 	gramatica = generarGramatica()
