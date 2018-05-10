@@ -4,8 +4,9 @@
 
 import sys
 from random import randint
-import carga, inGrammar
-	
+from carga import carga
+from inGrammar import inGrammar
+
 def generarPregunta():
 	"""
 	Por ahora cojo una pregunta de las que tengo
@@ -26,7 +27,7 @@ def main():
 	4- Las características identificadas deben generar una serie de pisos válidos
 	5- Con los pisos válidos hay que generar una respuesta
 	"""
-	casas = carga.cargarCasas() 
+	casas = carga.cargarCasas()
 	pregunta = generarPregunta()
 	casa = inGrammar.analizarPregunta(pregunta)
 
