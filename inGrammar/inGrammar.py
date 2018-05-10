@@ -4,6 +4,7 @@
 from nltk import grammar, parse, data
 from re import findall
 from unidecode import unidecode
+import os
 
 """
 Módulo encargado de analizar las preguntas realizadas al chatbot por medio
@@ -19,9 +20,10 @@ def generarGramatica():
 	"""
 	Función que genera la CFG para reconocer las preguntas entrantes con nltk
 	"""
-	gramatica = data.load('file:entrada.cfg')
+	a = os.path.dirname(os.path.abspath(__file__))
+	gramatica = data.load('file:' + a + '/entrada.cfg')
 
-	return grammar.FeatureGrammar.fromstring(gramatica)
+	return gramatica
 
 def tokenizar(pregunta):
 	"""
@@ -31,6 +33,8 @@ def tokenizar(pregunta):
 	- Unidecode pasa el string de unicode al ascii plano mas cercano (tildes y símbolos)
 	- Elimina signos de puntuación 
 	"""
+	pregunta = ' €'.join(pregunta.split('€')) # Si el símbolo esta pegado a los números, lo separo
+	res = findall('\w+', unidecode(pregunta.decode('utf-8').lower()))
 	return findall('\w+', unidecode(pregunta.decode('utf-8').lower()))
 
 def analizar(preg, parser):
