@@ -33,18 +33,29 @@ def tokenizar(pregunta):
 	- Unidecode pasa el string de unicode al ascii plano mas cercano (tildes y símbolos)
 	- Elimina signos de puntuación 
 	"""
+	nums = []
 	pregunta = ' €'.join(pregunta.split('€')) # Si el símbolo esta pegado a los números, lo separo
 	res = findall('\w+', unidecode(pregunta.decode('utf-8').lower()))
-	return findall('\w+', unidecode(pregunta.decode('utf-8').lower()))
+	# La CFG no soporta los numeros de mas de una cifra.
+	# O los guardo y los sustituyo por un token o les hago split y los junto después
+	for i in range(len(res)):
+		if res[i].isdigit() and int(res[i]) > 9:
+			nums.append(res[i])
+			res[i] = 'num'
+
+	return res, nums
 
 def analizar(preg, parser):
-	it = parser.parse(preg)
-	Caracs = list(it.subtrees(filter=lambda x: x.label()=='Carac')) # Provisional, para sacar las características especificadas
+	for tree in parser.parse(preg):
+		print tree
+	#Caracs = list(it.subtrees(filter=lambda x: x.label()=='Carac')) # Provisional, para sacar las características especificadas
 
 def analizarPregunta(pregunta):
+	print pregunta
 	gramatica = generarGramatica()
-	parser = parse.RecursiveDescentParser(gramatica)
-	pregunta = tokenizar(pregunta)
+	parser = parse.RecursiveDescentParser(gramatica) # trace=2
+	pregunta, numeros = tokenizar(pregunta)
+	print pregunta
 	piso = analizar(pregunta, parser)
 	
 	return piso

@@ -15,7 +15,9 @@ def generarPregunta():
 	doc = open('preguntas.txt', 'r')
 	res = doc.read().split(';')
 	doc.close()
-	return res[randint(0,len(res)-1)]
+	res = res[randint(0,len(res)-1)]
+	res = 'Quiero alquilar un piso con 2 baños y 3 habitaciones en Coslada'
+	return res
 
 def main():
 	"""
