@@ -45,10 +45,27 @@ def tokenizar(pregunta):
 
 	return res, nums
 
-def analizar(preg, parser):
-	for tree in parser.parse(preg):
-		print tree
-	#Caracs = list(it.subtrees(filter=lambda x: x.label()=='Carac')) # Provisional, para sacar las características especificadas
+def analizar(preg, nums, parser):
+	caracs = ['Precio' , 'Lugar' , 'Tamano' , 'Estado' , 'Muebles' , 'Habit' , 'Banos' , 'Alq' , 'TipoP' , 'TipoS' , 'Accion', 'Op']
+	#for tree in parser.parse(preg):
+	#	print tree
+	try:
+		tree = parser.parse(preg).next()
+		c = list(tree.subtrees(filter=lambda x: x.label() in caracs)) # Para sacar las características especificadas
+	except StopIteration:
+		c = None
+	
+	piso = generarPiso(c, nums)
+	
+	return c
+
+def generarPiso(caracs, nums):
+	piso = [0] * 9
+	for c in caracs:
+		hojas = c.leaves()
+		procesaCarac(hojas, piso, nums)
+	
+	return piso
 
 def analizarPregunta(pregunta):
 	print pregunta
@@ -56,6 +73,6 @@ def analizarPregunta(pregunta):
 	parser = parse.RecursiveDescentParser(gramatica) # trace=2
 	pregunta, numeros = tokenizar(pregunta)
 	print pregunta
-	piso = analizar(pregunta, parser)
+	piso = analizar(pregunta, numeros, parser)
 	
 	return piso
