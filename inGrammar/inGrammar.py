@@ -5,6 +5,7 @@ from nltk import grammar, parse, data
 from re import findall
 from unidecode import unidecode
 import os
+from conversor import procesaCarac
 
 """
 Módulo encargado de analizar las preguntas realizadas al chatbot por medio
@@ -46,7 +47,7 @@ def tokenizar(pregunta):
 	return res, nums
 
 def analizar(preg, nums, parser):
-	caracs = ['Precio' , 'Lugar' , 'Tamano' , 'Estado' , 'Muebles' , 'Habit' , 'Banos' , 'Alq' , 'TipoP' , 'TipoS' , 'Accion', 'Op']
+	caracs = ['Precio' , 'Lugar' , 'Tamano' , 'Estado' , 'Muebles' , 'Habit' , 'Banos' , 'Alq' , 'TipoP' , 'TipoS' , 'Op']
 	#for tree in parser.parse(preg):
 	#	print tree
 	try:
@@ -57,13 +58,12 @@ def analizar(preg, nums, parser):
 	
 	piso = generarPiso(c, nums)
 	
-	return c
+	return piso
 
 def generarPiso(caracs, nums):
 	piso = [0] * 9
 	for c in caracs:
-		hojas = c.leaves()
-		procesaCarac(hojas, piso, nums)
+		procesaCarac(c, piso, nums)
 	
 	return piso
 
