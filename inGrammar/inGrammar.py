@@ -53,7 +53,7 @@ def analizar(preg, nums, parser):
 	try:
 		tree = parser.parse(preg).next()
 		c = list(tree.subtrees(filter=lambda x: x.label() in caracs)) # Para sacar las características especificadas
-	except StopIteration:
+	except (StopIteration, ValueError): # Si el parsing falla
 		c = None
 	
 	piso = generarPiso(c, nums)
@@ -62,8 +62,9 @@ def analizar(preg, nums, parser):
 
 def generarPiso(caracs, nums):
 	piso = [0] * 9
-	for c in caracs:
-		procesaCarac(c, piso, nums)
+	if caracs is not None:
+		for c in caracs:
+			procesaCarac(c, piso, nums)
 	
 	return piso
 

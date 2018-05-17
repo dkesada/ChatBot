@@ -4,6 +4,13 @@
 from re import search
 
 """
+A partir de los subárboles que nos interesan del parsing con la CFG sacamos
+los atributos para el array de la casa. 
+La función principal procesaCarac recibe un subárbol, el array de la casa
+inicializado a 0 y los números que se hayan extraído al tokenizar.
+
+Como referencia, un array [0..8] de una casa representa:
+
 	[0] - 1 Alquiler, 2 Venta
 	[1] - 1 Chalet, 2 Piso, 3 Dúplex, 4 Ático, 5 Rústica
 	[2] - 1 Coslada, 2 Alcalá, 3 Mejorada, 4 Torrejón
@@ -16,6 +23,13 @@ from re import search
 """
 
 def procesaCarac(c, piso, nums):
+
+	"""
+	Función principal. Recibe un subárbol con una característica y pasa su label
+	por un switch de funciones para elegir cómo tratarlo. Modificará una posición del
+	array piso[0..8].
+	"""
+
 	label = c.label()
 	hojas = ' '.join(c.leaves())
 	switch = {
@@ -35,6 +49,13 @@ def procesaCarac(c, piso, nums):
 	foo(c, hojas, piso, nums)
 
 def cifra(texto, nums):
+
+	"""
+	Función que extrae un número de un texto. Si el número es de más de dos cifras,
+	lo recupera de la lista nums[] creada al tokenizar. Los números pueden ser un token 'num',
+	cifras de 0 al 9 u ordinales del 'un' al 'diez'.
+	"""
+
 	if 'num' in texto:
 		res = nums.pop(0)
 	elif search('[0-9]+', texto) is not None:
