@@ -16,7 +16,7 @@ def generarPregunta():
 	res = doc.read().split(';')
 	doc.close()
 	res = res[randint(0,len(res)-1)]
-	res = 'Quiero alquilar un piso con 2 baños y 3 habitaciones en Coslada'
+	#res = 'Quiero alquilar un piso con 2 baños y 3 habitaciones en Coslada'
 	return res
 
 def main():
@@ -29,9 +29,10 @@ def main():
 	4- Las características identificadas deben generar una serie de pisos válidos
 	5- Con los pisos válidos hay que generar una respuesta
 	"""
-	casas = carga.cargarCasas()
+	carga.cargarCasas()
 	pregunta = generarPregunta()
 	casa = inGrammar.analizarPregunta(pregunta)
+	#respuesta = generarRespuesta(casa,pregunta)
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
