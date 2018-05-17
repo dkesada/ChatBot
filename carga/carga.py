@@ -3,6 +3,7 @@
 
 import sys
 from re import search
+from db import db
 
 """
 Módulo encargado de la carga de la información de la base de datos de pisos.
@@ -16,20 +17,19 @@ los pisos cargados.
 
 def cargarCasas():
 	"""
-	Por ahora así. Puede sustituirse por una base de datos
+	Carga las casas del scraper a la base de datos si no están cargadas ya
 	"""
-	reload(sys)  
-	sys.setdefaultencoding('utf8')
-	path = 'scraper/InfoPisos'
-	doc = open(path, 'r')
-	casas = doc.read().split('\ni')
-	doc.close()
-	res = []
-	for c in casas:
-		c = c.split(';')
-		res.append(cropArray(c))
+	if db.vacia():
+		reload(sys)  
+		sys.setdefaultencoding('utf8')
+		path = 'scraper/InfoPisos'
+		doc = open(path, 'r')
+		casas = doc.read().split('\ni')
+		doc.close()
+		for c in casas:
+			c = c.split(';')
+			db.guardarCasa(cropArray(c))
 	
-	return res
 
 def cropArray(c):
 	"""
