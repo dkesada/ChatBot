@@ -36,6 +36,7 @@ def tokenizar(pregunta):
 	"""
 	nums = []
 	pregunta = ' €'.join(pregunta.split('€')) # Si el símbolo esta pegado a los números, lo separo
+	pregunta = ' m2'.join(pregunta.split('m2'))
 	res = findall('\w+', unidecode(pregunta.decode('utf-8').lower()))
 	# La CFG no soporta los numeros de mas de una cifra.
 	# O los guardo y los sustituyo por un token o les hago split y los junto después
@@ -47,7 +48,8 @@ def tokenizar(pregunta):
 	return res, nums
 
 def analizar(preg, nums, parser):
-	caracs = ['Precio' , 'Lugar' , 'Tamano' , 'Estado' , 'Muebles' , 'Habit' , 'Banos' , 'Alq' , 'TipoP' , 'TipoS' , 'Op']
+	caracs = ['Precio' , 'Lugar' , 'Tamano' , 'Estado' , 'Muebles' , 'Habit' , 'Banos' , 'Alq' , 'TipoP' , 'TipoS' , 'Op', 'Disp']
+	tree = None
 	#for tree in parser.parse(preg):
 	#	print tree
 	try:
@@ -58,7 +60,7 @@ def analizar(preg, nums, parser):
 	
 	piso = generarPiso(c, nums)
 	
-	return piso
+	return piso, tree
 
 def generarPiso(caracs, nums):
 	piso = [0] * 9
@@ -74,6 +76,6 @@ def analizarPregunta(pregunta):
 	parser = parse.RecursiveDescentParser(gramatica) # trace=2
 	pregunta, numeros = tokenizar(pregunta)
 	print pregunta
-	piso = analizar(pregunta, numeros, parser)
+	piso, arbol = analizar(pregunta, numeros, parser)
 	
-	return piso
+	return piso, arbol

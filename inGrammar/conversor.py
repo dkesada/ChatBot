@@ -43,7 +43,8 @@ def procesaCarac(c, piso, nums):
             'Alq': alq,
             'TipoP': tipos,
             'TipoS': tipos,
-            'Op': op
+            'Op': op,
+            'Disp': op
             }
 	foo = switch[label]
 	foo(c, hojas, piso, nums)
