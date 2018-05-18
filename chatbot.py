@@ -16,7 +16,7 @@ def generarPregunta():
 	res = doc.read().split(';')
 	doc.close()
 	res = res[randint(0,len(res)-1)]
-	#res = 'Quiero alquilar un piso con 2 baños y 3 habitaciones en Coslada'
+	#res = '¿Hay en Coslada pisos de 3 habitaciones a la venta por menos de 110000 euros? '
 	return res
 
 def main():
@@ -31,8 +31,9 @@ def main():
 	"""
 	carga.cargarCasas()
 	pregunta = generarPregunta()
-	casa = inGrammar.analizarPregunta(pregunta)
-	#respuesta = generarRespuesta(casa,pregunta)
+	casa, arbol = inGrammar.analizarPregunta(pregunta)
+	print casa
+	#respuesta = generarRespuesta(casa, pregunta, arbol)
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
