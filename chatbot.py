@@ -6,6 +6,7 @@ import sys
 from random import randint
 from carga import carga
 from inGrammar import inGrammar
+from nlg import outGrammar
 
 def generarPregunta():
 	"""
@@ -33,7 +34,8 @@ def main():
 	pregunta = generarPregunta()
 	casa, arbol = inGrammar.analizarPregunta(pregunta)
 	print casa
-	#respuesta = generarRespuesta(casa, pregunta, arbol)
+	respuesta = outGrammar.generarRespuesta(casa, pregunta, arbol)
+	print respuesta
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
