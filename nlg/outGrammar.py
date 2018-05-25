@@ -24,25 +24,33 @@ def generarRespuesta(casa, pregunta, arbol):
 	y genera una respuesta en lenguaje natural acorde.
 	En caso de que la casa sea un vector de 0's, se entiende que la pregunta no fue comprendida, y se genera una
 	petición para que el usuario repita su pregunta con otras palabras.
+	Cuenta con el grado de certidumbre para generar respuestas de distinto tipo, según lo seguro que esté el sistema
+	de los resultados que ha obtenido.
 	"""
 	if sum(casa) is not 0:
-		sim = db.obtenerSimilares(casa)
-		res = generarTexto(sim,pregunta,arbol)
+		sim, cert = db.obtenerSimilares(casa)
+		res = generarTexto(sim,cert,pregunta,arbol)
 	else:
 		res = preguntaNoComprendida()
 
 	return res
 
-def generarTexto(sim, pregunta, arbol):
+def generarTexto(sim, cert, pregunta, arbol):
 	"""
-	Comprueba las casas similares a lo preguntado y genera una respuesta acorde a la pregunta.
+	Comprueba la certidumbre de las casas encontradas y genera una respuesta acorde a la pregunta y la situación.
 	"""
 	res = 'Texto provisional de comprensión'
-	
-	for i in sim:
-		print i
-	
+	"""
+	if cert is 2:
+		res = respuestaSegura(sim, pregunta, arbol)
+	elif cert is 1:
+		res = respuestaAproximada(sim, pregunta, arbol)
+	else:
+		res = respuestaNoEncontrada()
+	"""
 	return res
+	
+	
 	
 def preguntaNoComprendida():
 	"""

@@ -17,7 +17,7 @@ def generarPregunta():
 	res = doc.read().split(';')
 	doc.close()
 	res = res[randint(0,len(res)-1)]
-	#res = '¿Hay en Coslada pisos de 3 habitaciones a la venta por menos de 110000 euros? '
+
 	return res
 
 def main():
