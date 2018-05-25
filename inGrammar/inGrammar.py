@@ -47,6 +47,14 @@ def tokenizar(pregunta):
 
 	return res, nums
 
+"""
+Estaría bien una función que eliminase palabras del dominio que no me interesan.
+Será del tipo stopWords, con una lista de palabras y n-gramas que no aporten nada. 
+Serán en su mayoría adjetivos o construcciones del tipo "Hola buenas" o "por favor"
+
+def preprocesar(pregunta):
+"""
+
 def analizar(preg, nums, parser):
 	caracs = ['Precio' , 'Lugar' , 'Tamano' , 'Estado' , 'Muebles' , 'Habit' , 'Banos' , 'Alq' , 'TipoP' , 'TipoS' , 'Op', 'Disp']
 	tree = None
