@@ -80,6 +80,7 @@ def main():
 			html = driver.page_source
 			soup = BeautifulSoup(html,'html.parser')
 			# 1 archivo por cada casa con descripción y características
+			# urlCasa = driver.current_url
 			scrapInfo(soup)
 			print str(i*100/l) + '%...'
 			driver.back()
