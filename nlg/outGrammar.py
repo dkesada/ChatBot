@@ -2,6 +2,10 @@
 #author: David Quesada López
 
 from db import db
+from nltk.parse.generate import generate
+from nltk import data
+import os
+import markovify
 
 """
 Este módulo se encarga de generar respuestas a partir de la casa generada de las preguntas.
@@ -39,25 +43,47 @@ def generarTexto(sim, cert, pregunta, arbol):
 	"""
 	Comprueba la certidumbre de las casas encontradas y genera una respuesta acorde a la pregunta y la situación.
 	"""
-	res = 'Texto provisional de comprensión'
-	"""
+	
 	if cert is 2:
 		res = respuestaSegura(sim, pregunta, arbol)
 	elif cert is 1:
 		res = respuestaAproximada(sim, pregunta, arbol)
 	else:
 		res = respuestaNoEncontrada()
-	"""
+	
 	return res
 	
+def respuestaSegura(sim, pregunta, arbol):
+	a = os.path.dirname(os.path.abspath(__file__))
+	gramatica = data.load('file:' + a + '/segura.cfg')
 	
+	res = generate(gramatica, n=1, depth=6)[0]
+	res = ' '.join(res)
+	
+	return res
+	
+def respuestaAproximada(sim, pregunta, arbol):
+	
+	return "aproximado"
+	
+def respuestaNoEncontrada():
+	"""
+	Probablemente la aproximación de las preguntas no comprendidas sea también válida aquí
+	"""
+	return "nada"
 	
 def preguntaNoComprendida():
 	"""
-	Función que genera una respuesta para pedir al usuario que repita su pregunta de otra manera.
-	Para esto, no creo que haga falta una gramática ni una batería de respuestas tipadas, con unas cuantas
-	respuestas enlatadas aleatorias debería ser suficiente.
+	Función que genera una respuesta comunicando que no se ha entendido la pregunta.
+	Para esto, no creo que haga falta una gramática ni una batería de respuestas tipadas, con respuestas enlatadas aleatorias debería ser suficiente.
+	De hecho, unas cuantas respuestas y markovify para una red de markov podría venir bien para que sea un poco más sofisticado.
 	"""
-	res = 'Texto provisional de no comprensión'
+	
+	with open("respNoCompr.txt") as f:
+		text = f.read()
+
+	text_model = markovify.NewlineText(text)
+	
+	res = text_model.make_sentence(tries=100,max_overlap_total=95)
 	
 	return res
