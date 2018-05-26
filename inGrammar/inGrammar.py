@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #author: David Quesada López
 
-from nltk import grammar, parse, data
+from nltk import parse, data
 from re import findall
 from unidecode import unidecode
 import os
