@@ -17,7 +17,7 @@ def generarPregunta():
 	res = doc.read().split(';')
 	doc.close()
 	res = res[randint(0,len(res)-1)]
-
+	res = 'Enséñame un ático en Coslada'
 	return res
 
 def main():

@@ -6,6 +6,7 @@ from nltk.parse.generate import generate
 from nltk import data
 import os
 import markovify
+from random import randint
 
 """
 Este módulo se encarga de generar respuestas a partir de la casa generada de las preguntas.
@@ -57,11 +58,83 @@ def respuestaSegura(sim, pregunta, arbol):
 	a = os.path.dirname(os.path.abspath(__file__))
 	gramatica = data.load('file:' + a + '/segura.cfg')
 	
-	res = generate(gramatica, n=1, depth=6)[0]
+	res = list(generate(gramatica))
+	res = res[randint(0,len(res)-1)]
+	res = coordina(res, arbol)
 	res = ' '.join(res)
 	
 	return res
 	
+def coordina(frase, arbol):
+	"""
+	Coordina el sintagma nominal buscado en la pregunta con el que se ofrece en la respuesta
+	"""
+	
+	sub = list(arbol.subtrees(filter=lambda x: x.label() in {"TipoS","TipoP"}))[0]
+	genero, numero, nombre = procesaTipo(sub)
+	sintagma = generaSintagma(genero, numero, nombre)
+	sn = frase.index('Sn')
+	frase = frase[0:sn] + sintagma + frase[sn+1:]
+	frase = coordinaVerbo(frase, numero)
+	return frase
+	
+
+def procesaTipo(sub):
+	"""Analiza el subarbol de TipoS o TipoP para saber el tipo, el género y qué nombre se busca"""
+	genero = 0 # 0 = fem, 1 = masc
+	numero = 0 # 0 = plural, 1 = singular
+	nombre = tilda(sub.leaves())
+	
+	if "TipoS" in [sub.label()]:
+		numero = 1
+		genero = 1
+		if "casa" in nombre: genero = 0
+	else:
+		numero = 0
+		genero = 1
+		if "casas" in nombre: genero = 0
+	
+	return genero, numero, nombre
+		
+def generaSintagma(genero, numero, nombre):
+	"""Genera el sintagma nominal adecuado en base al genero y número"""
+	det = 'est'
+	
+	if genero is 0 and numero is 0:
+		det += 'as'
+	elif genero is 0 and numero is 1:
+		det += 'a'
+	elif genero is 1 and numero is 0:
+		det += 'os'
+	elif genero is 1 and numero is 1:
+		det += 'e'
+	
+	return [det] + nombre
+
+def coordinaVerbo(frase, numero):
+	"""Si aparecen 'puede' o 'parece' en la respuesta, los coordina"""
+	if numero is 0:
+		if 'parece' in frase:
+			ind = frase.index('parece')
+			frase[ind] = frase[ind]+'n'
+		elif 'puede' in frase:
+			ind = frase.index('parece')
+			frase[ind] = frase[ind]+'n'
+	
+	return frase
+
+def tilda(nombre):
+	if 'atico' in nombre:
+		nombre[0] = 'ático'
+	elif 'duplex' in nombre:
+		nombre[0] = 'dúplex'
+	elif 'rustica' in nombre:
+		nombre[1] = 'rústica'
+	elif 'rusticas' in nombre:
+		nombre[1] = 'rústicas'
+	return nombre
+	
+
 def respuestaAproximada(sim, pregunta, arbol):
 	
 	return "aproximado"
@@ -78,8 +151,8 @@ def preguntaNoComprendida():
 	Para esto, no creo que haga falta una gramática ni una batería de respuestas tipadas, con respuestas enlatadas aleatorias debería ser suficiente.
 	De hecho, unas cuantas respuestas y markovify para una red de markov podría venir bien para que sea un poco más sofisticado.
 	"""
-	
-	with open("respNoCompr.txt") as f:
+	a = os.path.dirname(os.path.abspath(__file__))
+	with open(a+'/respNoCompr.txt') as f:
 		text = f.read()
 
 	text_model = markovify.NewlineText(text)
