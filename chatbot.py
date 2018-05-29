@@ -17,7 +17,7 @@ def generarPregunta():
 	res = doc.read().split(';')
 	doc.close()
 	res = res[randint(0,len(res)-1)]
-	res = 'Enséñame un ático en Coslada'
+	res = 'Enséñame un ático bonito en Coslada'
 	return res
 
 def main():
@@ -30,9 +30,11 @@ def main():
 	4- Las características identificadas deben generar una serie de pisos válidos
 	5- Con los pisos válidos hay que generar una respuesta
 	"""
+	nlu = inGrammar.InGrammar()
+	
 	carga.cargarCasas()
 	pregunta = generarPregunta()
-	casa, arbol = inGrammar.analizarPregunta(pregunta)
+	casa, arbol = nlu.analizarPregunta(pregunta)
 	print casa
 	respuesta = outGrammar.generarRespuesta(casa, pregunta, arbol)
 	print respuesta
