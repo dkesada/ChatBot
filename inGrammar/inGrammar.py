@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 #author: David Quesada López
 
-from nltk import parse, data
+from nltk import data
+from nltk.parse.chart import BottomUpLeftCornerChartParser #RecursiveDescentParser # ShiftReduceParser
 from re import findall
 from unidecode import unidecode
 import os
@@ -21,7 +22,7 @@ class InGrammar:
 	
 	def __init__(self):
 		self.gramatica = self.generarGramatica()
-		self.parser = parse.RecursiveDescentParser(self.gramatica) # trace=2
+		self.parser = BottomUpLeftCornerChartParser(self.gramatica) # trace=2
 		self.caracs = ['Precio' , 'Lugar' , 'Tamano' , 'Estado' , 'Muebles' , 'Habit' , 'Banos' , 'Alq' , 'TipoP' , 'TipoS' , 'Op', 'Disp']
 		self.stopwords = self.cargarStop()
 	
