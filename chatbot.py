@@ -31,12 +31,13 @@ def main():
 	5- Con los pisos válidos hay que generar una respuesta
 	"""
 	nlu = inGrammar.InGrammar()
+	nlg = outGrammar.OutGrammar()
 	
 	carga.cargarCasas()
 	pregunta = generarPregunta()
 	casa, arbol = nlu.analizarPregunta(pregunta)
 	print casa
-	respuesta = outGrammar.generarRespuesta(casa, pregunta, arbol)
+	respuesta = nlg.generarRespuesta(casa, pregunta, arbol)
 	print respuesta
 
 reload(sys)  
