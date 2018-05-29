@@ -17,7 +17,7 @@ def generarPregunta():
 	res = doc.read().split(';')
 	doc.close()
 	res = res[randint(0,len(res)-1)]
-
+	
 	return res
 
 def main():

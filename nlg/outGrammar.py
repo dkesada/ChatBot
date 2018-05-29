@@ -127,7 +127,7 @@ class OutGrammar:
 				ind = frase.index('parece')
 				frase[ind] = frase[ind]+'n'
 			elif 'puede' in frase:
-				ind = frase.index('parece')
+				ind = frase.index('puede')
 				frase[ind] = frase[ind]+'n'
 		
 		return frase
